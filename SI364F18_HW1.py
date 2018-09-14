@@ -12,6 +12,8 @@
 ## Below is code for one of the simplest possible Flask applications. Edit the code so that once you run this application locally and go to the URL 'http://localhost:5000/class', you see a page that says "Welcome to SI 364!"
 
 from flask import Flask
+import requests
+import json
 app = Flask(__name__)
 app.debug = True
 
@@ -22,6 +24,15 @@ def hello_to_you():
 @app.route('/class')
 def welcome_class():
     return "Welcome to SI 364!"
+
+@app.route('/movie/<name_of_movie_here_one_word>')
+def movie(name_of_movie_here_one_word):
+    baseurl = 'https://itunes.apple.com/search'
+    params = {'term': name_of_movie_here_one_word,
+              'entity': 'movie'}
+    response = requests.get(baseurl, params=params)
+    json_reponse = json.loads(response.text)
+    return str(json_reponse)
 
 if __name__ == '__main__':
     app.run()
