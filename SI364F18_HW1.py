@@ -11,7 +11,7 @@
 ## [PROBLEM 1] - 150 points
 ## Below is code for one of the simplest possible Flask applications. Edit the code so that once you run this application locally and go to the URL 'http://localhost:5000/class', you see a page that says "Welcome to SI 364!"
 
-from flask import Flask
+from flask import Flask, request
 import requests
 import json
 app = Flask(__name__)
@@ -21,10 +21,12 @@ app.debug = True
 def hello_to_you():
     return 'Hello!'
 
+# problem 1
 @app.route('/class')
 def welcome_class():
     return "Welcome to SI 364!"
 
+# problem 2
 @app.route('/movie/<name_of_movie_here_one_word>')
 def movie(name_of_movie_here_one_word):
     baseurl = 'https://itunes.apple.com/search'
@@ -33,6 +35,24 @@ def movie(name_of_movie_here_one_word):
     response = requests.get(baseurl, params=params)
     json_reponse = json.loads(response.text)
     return str(json_reponse)
+
+# problem 3
+@app.route('/question', methods=['GET','POST'])
+def question():
+    html_form = '''
+    <html>
+    <body>
+    <form action = '/question' method = 'POST'>
+        <label for = 'i'> Enter your favorite number: </label>
+        <br>
+        <input type = 'text' name = 'number' id = 'i'> </input>
+        <input type = 'submit' name = 'Submit'> </input>
+    </form>
+    </body>
+    </html>
+    '''
+    double_num = 2 * int(request.form.get('number', ''))
+    return html_form + 'Double your favorite number is {}'.format(double_num)
 
 if __name__ == '__main__':
     app.run()
