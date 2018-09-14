@@ -5,7 +5,7 @@
 #################################
 
 ## List below here, in a comment/comments, the people you worked with on this assignment AND any resources you used to find code (50 point deduction for not doing so). If none, write "None".
-
+# None
 
 
 ## [PROBLEM 1] - 150 points
@@ -19,6 +19,9 @@ app.debug = True
 def hello_to_you():
     return 'Hello!'
 
+@app.route('/class')
+def welcome_class():
+    return "Welcome to SI 364!"
 
 if __name__ == '__main__':
     app.run()
