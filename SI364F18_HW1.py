@@ -54,6 +54,49 @@ def question():
     double_num = 2 * int(request.form.get('number', ''))
     return html_form + 'Double your favorite number is {}'.format(double_num)
 
+# problem 4
+# Displays current max and/or min temperature for US city that user inputs
+@app.route('/problem4form', methods=['GET', 'POST'])
+def problem4():
+    html_form = '''
+    <html>
+    <body>
+    <form action = '/problem4form' method = 'POST'>
+        Enter US city zip code and choose to see current max and/or min temperatures
+        <br><br>
+        <input type = 'checkbox' name = 'minbox' value = 'Min'> </input> Minimum temperature
+        <br>
+        <input type = 'checkbox' name = 'maxbox' value = 'Max'> </input> Maximum temperature
+        <br>
+        <input type = 'text' name = 'zip'> </input>
+        <input type = 'submit' name = 'Submit'> </input>
+    </form>
+    </body>
+    </html>
+    '''
+
+    city_zip = request.form.get('zip', '')
+
+    baseurl = 'http://api.openweathermap.org/data/2.5/weather'
+    params = {'zip': city_zip + ',us',
+              'APPID': '74667a8f907f694ce9b4d1f541617a80',
+              'cnt': '1',
+              'units': 'imperial'}
+    response = requests.get(baseurl, params=params)
+    json_reponse = json.loads(response.text)
+
+    max_temp = json_reponse['main']['temp_max']
+    min_temp = json_reponse['main']['temp_min']
+
+    if request.form.get('minbox') != None and request.form.get('maxbox') != None:
+        return html_form + '<br><br> Minimum temperature: {} F<br> Maximum temperature: {} F'.format(min_temp, max_temp)
+    elif request.form.get('minbox') != None:
+        return html_form + '<br><br> Minimum temperature: {} F'.format(min_temp)
+    elif request.form.get('maxbox') != None:
+        return html_form + '<br><br> Maximum temperature: {} F'.format(max_temp)
+
+    return html_form
+
 if __name__ == '__main__':
     app.run()
 
